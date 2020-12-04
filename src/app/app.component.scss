@@ -1,0 +1,23 @@
+.coupon-form {
+  margin: 0 auto;
+  min-width: 150px;
+  max-width: 500px;
+  margin-top: 20vh;
+}
+
+.width100 {
+  width: 100%;
+}
+.margin10{
+  margin: 5px 0 5px 0;
+}
+.width50{
+  width: 50%;
+}
+.flexContainer{
+  display: flex;
+  justify-content: space-around;
+}
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: white!important;
+}
