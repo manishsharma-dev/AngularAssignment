@@ -12,6 +12,9 @@
               <mat-option value="3">Type 3</mat-option>
             </mat-select>
           </mat-form-field>
+          <div *ngIf="submitted && f.coupon_type.errors" class="text-danger">
+            <div *ngIf="f.coupon_type.errors.required">Coupon Type is required</div>
+        </div>
          </div>
       </div>     
       <div class="row">
@@ -20,16 +23,22 @@
             <mat-label>Coupon Code*</mat-label>
             <input matInput autocomplete="off" formControlName="coupon_code">
           </mat-form-field>
+          <div *ngIf="submitted && f.coupon_code.errors" class="text-danger">
+            <div *ngIf="f.coupon_code.errors.required">Coupon Code is required</div>
+        </div>
         </div>
       </div> 
       <div class="row">
         <div class="col-sm-6">
           <mat-form-field>
             <mat-label>Start Date*</mat-label>
-            <input matInput autocomplete="off" [matDatepicker]="dp1" formControlName="valid_from">
+            <input matInput [min]="startMinDate" autocomplete="off" [matDatepicker]="dp1" formControlName="valid_from">
             <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
             <mat-datepicker #dp1 disabled="false"></mat-datepicker>
           </mat-form-field>
+          <div *ngIf="submitted && f.valid_from.errors" class="text-danger">
+            <div *ngIf="f.valid_from.errors.required">Start Date is required</div>
+        </div>
         </div>
         <div class="col-sm-6">
           <mat-form-field>
@@ -38,23 +47,32 @@
             <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
             <mat-datepicker #dp2 disabled="false"></mat-datepicker>
           </mat-form-field>
+          <div *ngIf="submitted && f.valid_to.errors" class="text-danger">
+            <div *ngIf="f.valid_to.errors.required">End Date is required</div>
+        </div>
         </div>
       </div>     
       <div class="row">
         <div class="col-sm-6">
           <mat-form-field class="width100">
-            <mat-label>Coupon Availability</mat-label>
+            <mat-label>Coupon Availability*</mat-label>
             <mat-select #t formControlName="is_unlimited">
-              <mat-option value="1">Unlimited</mat-option>
-              <mat-option value="2">Limited</mat-option>
+              <mat-option value="true">Unlimited</mat-option>
+              <mat-option value="false">Limited</mat-option>
             </mat-select>
           </mat-form-field>
+          <div *ngIf="submitted && f.is_unlimited.errors" class="text-danger">
+            <div *ngIf="f.is_unlimited.errors.required">Coupon Availability is required</div>
+        </div>
         </div>      
-        <div class="col-sm-6" *ngIf="t.value == '2'">
+        <div class="col-sm-6" *ngIf="t.value == 'false'">
           <mat-form-field class="width100">
             <mat-label>Coupon Count</mat-label>
             <input oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" matInput autocomplete="off" formControlName="coupon_count">
           </mat-form-field>
+          <div *ngIf="submitted && f.coupon_count.errors" class="text-danger">
+            <div *ngIf="f.coupon_count.errors.required">Coupon Count is required</div>
+        </div>
         </div>  
       </div>
       <div class="row">
@@ -62,10 +80,21 @@
           <ckeditor formControlName="tnc"></ckeditor>
         </div>
       </div>
+      <div class="row">
+        <div class="col-sm-12">
+         <mat-form-field class="width100">
+           <mat-label>Coupon Status</mat-label>
+           <mat-select formControlName="is_active">
+             <mat-option value="true">Active</mat-option>
+             <mat-option value="false">inActive</mat-option>
+           </mat-select>
+         </mat-form-field>
+        </div>
+     </div> 
       <mat-toolbar>
         <span>COUPON RULES:</span>
       </mat-toolbar>
-      <mat-card class="ruleForm" formArrayName="rules" *ngFor="let rule of CouponForm.controls.rules?.value; let i = index">
+      <mat-card class="ruleForm" formArrayName="rules" *ngFor="let rule of getrulesControl(); let i = index">
           <ng-container [formGroupName]="i">
             <mat-toolbar>
               <span>Rule {{i+1}}</span>
@@ -74,35 +103,47 @@
                 <div class="col-md-6">
                  <mat-form-field >
                    <mat-label>Min Amount*</mat-label>
-                   <input matInput name="min_amount" autocomplete="off" formControlName="min_amount">
+                   <input matInput oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="min_amount" autocomplete="off" formControlName="min_amount">
                  </mat-form-field>
+                 <div *ngIf="submitted && rulesF.controls[i].get('min_amount').errors?.required" class="text-danger">
+                  Min Amount is required
+              </div>
                 </div>
                 <div class="col-md-6">
                  <mat-form-field >
                    <mat-label>Max Amount</mat-label>
-                   <input matInput name="max_amount" autocomplete="off" formControlName="max_amount">
+                   <input matInput oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="max_amount" autocomplete="off" formControlName="max_amount">
                  </mat-form-field>
              </div>
             </div>              
             <div class="row">
               <div class="col-md-6">
                 <mat-form-field>
-                  <mat-label>Dsicount Type*</mat-label>
-                  <input matInput name="min_amount" autocomplete="off" formControlName="discount_type">
+                  <mat-label>Discount Type*</mat-label>
+                  <mat-select formControlName="discount_type">
+                    <mat-option value="1">Type 1</mat-option>
+                    <mat-option value="2">Type</mat-option>
+                  </mat-select>
                 </mat-form-field>
+                <div *ngIf="submitted && rulesF.controls[i].get('discount_type').errors?.required" class="text-danger">
+                  Discount Type is required
+              </div>
               </div>
               <div class="col-md-6">
                 <mat-form-field>
                   <mat-label>Discount Amount*</mat-label>
-                  <input matInput name="max_amount" autocomplete="off" formControlName="discount">
+                  <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" matInput name="max_amount" formControlName="discount">
                 </mat-form-field>
+                <div *ngIf="submitted && rulesF.controls[i].get('discount').errors?.required" class="text-danger">
+                  Discount is required
+              </div>
               </div>
             </div>
             <div class="row">
               <div class="col-sm-6">
                 <mat-form-field >
                   <mat-label>Max Discount Amount</mat-label>
-                    <input matInput name="max_amount" autocomplete="off" formControlName="max_discount">
+                    <input matInput oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="max_amount" autocomplete="off" formControlName="max_discount">
                 </mat-form-field>
               </div>              
             </div>
@@ -119,8 +160,12 @@
         </div> 
         <div class="row">
           <button mat-raised-button color="primary" class="submitButton">save</button>
+          <button type="reset" mat-raised-button color="primary" (click)="" class="submitButton">reset</button>
         </div>  
     </form>
   </div>
 
 </div>
+
+
+{{data | json}}
