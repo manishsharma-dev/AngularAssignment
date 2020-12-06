@@ -43,7 +43,7 @@
         <div class="col-sm-6">
           <mat-form-field>
             <mat-label>End Date*</mat-label>
-            <input matInput autocomplete="off" [matDatepicker]="dp2" formControlName="valid_to">
+            <input matInput [min]="endMinDate" autocomplete="off" [matDatepicker]="dp2" formControlName="valid_to">
             <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
             <mat-datepicker #dp2 disabled="false"></mat-datepicker>
           </mat-form-field>
@@ -159,8 +159,7 @@
           </div>
         </div> 
         <div class="row">
-          <button mat-raised-button color="primary" class="submitButton">save</button>
-          <button type="reset" mat-raised-button color="primary" (click)="" class="submitButton">reset</button>
+          <button mat-raised-button color="primary" class="submitButton">save</button>         
         </div>  
     </form>
   </div>

@@ -12,8 +12,12 @@ export class AppComponent implements OnInit {
   CouponForm: FormGroup;
   submitted = false;
   startMinDate: Date;
+  endMinDate: Date;
   ngOnInit() {
     this.createCouponForm();
+    this.startMinDate = new Date();
+    this.endMinDate = new Date();
+    //setting required validatorof coupon count at selection of is_unlimited dropdown
     this.CouponForm.get('is_unlimited').valueChanges.subscribe((val) => {
       if (val) {
         this.CouponForm.controls['coupon_count'].setValidators([
@@ -21,7 +25,12 @@ export class AppComponent implements OnInit {
         ]);
       }
     });
-    this.startMinDate = new Date();
+    //setting min date for valid_to at selection of valid_from
+    this.CouponForm.get('valid_from').valueChanges.subscribe((val) => {
+      if (val) {
+        this.endMinDate = val;
+      }
+    });
   }
 
   //creating the coupon form
